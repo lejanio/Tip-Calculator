@@ -1,0 +1,12 @@
+.main-section {
+  display: grid;
+  background-color: var(--neutral-white);
+}
+
+@media (min-width: 500px) {
+
+  .main-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
