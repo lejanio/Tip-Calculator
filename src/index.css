@@ -2,7 +2,7 @@
 
 :root {
     /*primary*/
-    --primary: hsl(172, 67%, 45%);
+    --primary: hsl(170, 67%, 45%);
 
     /*neutral*/
     --neutral-very-dark: hsl(183, 100%, 15%);
@@ -11,9 +11,16 @@
     --neutral-light-one: hsl(185, 41%, 84%);
     --neutral-light-two: hsl(189, 41%, 97%);
     --neutral-white: hsl(0, 0%, 100%);
+
+    --neutral-primary-shade: hsl(170, 61%, 72%);
+    --neutral-reddish: hsl(8, 84%, 39%);
+
 }
 
 body {
-    font-family: 'Space Mono', monospace;
     background-color: var(--neutral-light-one);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--neutral-dark-one)
 }
