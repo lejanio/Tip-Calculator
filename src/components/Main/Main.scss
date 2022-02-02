@@ -1,5 +1,6 @@
 .main-section {
   display: grid;
+  grid-gap: 2rem;
   background-color: var(--neutral-white);
   padding: 2em;
   border-radius: 10px;
@@ -51,3 +52,38 @@
   width: 100%;
 }
 
+.main-section__output-part {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: var(--neutral-very-dark);
+  padding: 3em 1.5em 1em 1.5em;
+  border-radius: 10px;
+}
+
+.output-part__items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.output-part__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+.label {
+  display: grid;
+  grid-gap: 0.25rem;
+}
+
+.label-heading {
+  font-size: 0.80rem;
+  color: var(--neutral-white)
+}
+
+.amount {
+  font-size: 1.6rem;
+  color: var(--primary)
+}
