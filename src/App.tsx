@@ -9,10 +9,7 @@ const App = () => (
       <header className="header">
         <img src={logo} alt="Splitter Logo" />
       </header>
-
-      <section>
-        <Main />
-      </section>
+      <Main />
     </div>
   </div>
 );

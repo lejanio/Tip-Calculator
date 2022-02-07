@@ -1,6 +1,32 @@
-### Objective
+# Tip Splitter App
 
-Thanks for checking out Pearl Latvija's front-end coding challenge.
+## General description
+
+The app receives user inputs of bill total amount, tip rate and the number of customers
+and calculates the tip amount, as well as the total amount per person.
+The inputs and results can then be reset using the RESET button which becomes active
+after valid inputs have been provided.
+
+The project is implemented using React (with TypeScript) following the responsive design
+principles.
+
+## Project structure
+
+1. The entry file is App.tsx:
+    - Contains the header section with the logo image
+    - Contains the main section component which, in turn, contains the input and button components
+2. Main.tsx file:
+    - Contains states for user input, calculated amounts, input validation error, as well as the clicked button
+    - Contains several instances of input component which, in turn, contains input state
+    - Contains several instances of button component, as well as the large button component
+    - Uses the useRef hook for referencing the input component for resetting user input
+3. The components are located in the src/components folder with a separate subfolder for each
+   corresponding component .tsx and .scss file.
+4. A CSS reset file is provided in the src/utils folder.
+
+---
+
+### Objective
 
 Your assignment is to build out this tip calculator app and get it looking as close to the design as possible.
 
@@ -39,5 +65,3 @@ You will find all the required assets in the `/images` folder. The assets are al
 Please organize, design, test and document your code as if it were going into production - then push your changes to the master branch. After you have pushed your code, you may submit the assignment on the assignment page.
 
 **Have fun building!** 🚀
-
-The Pearl Latvija Team

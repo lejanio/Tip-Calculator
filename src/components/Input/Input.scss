@@ -9,11 +9,12 @@
   appearance: none;
   background-color: var(--neutral-light-two);
   text-align: end;
-  width: 280px;
+  width: 100%;
+  height: 100%;
   padding: 0 0.5em;
   font: inherit;
-  color: var(--neutral-very-dark);
   font-size: 24px;
+  color: var(--neutral-very-dark);
   border: 2px solid transparent;
   border-radius: 5px;
   outline: none;
@@ -25,12 +26,19 @@
   &:focus {
     border: 2px solid var(--primary);
   }
+}
 
+.error {
+  border: 2px solid var(--neutral-reddish);
+
+  &:focus {
+    border: 2px solid var(--neutral-reddish);
+  }
 }
 
 .input__icon {
+  content: '';
   position: absolute;
-  content: 'word';
   top: 0.625rem;
   left: 1rem;
 }

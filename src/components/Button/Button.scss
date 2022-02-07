@@ -1,9 +1,9 @@
 .button {
   background-color: var(--neutral-very-dark);
-  width: 8rem;
-  height: 2.75rem;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 2.75rem;
   font-family: inherit;
   font-weight: 700;
   font-size: 1.4rem;
@@ -23,6 +23,11 @@
     background-color: var(--primary);
     color: var(--neutral-very-dark);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.2;
+  }
 }
 
 .active {
@@ -32,6 +37,6 @@
 
 @media (min-width: 768px) {
   .button {
-    width: 7rem
+    width: 100%;
   }
 }

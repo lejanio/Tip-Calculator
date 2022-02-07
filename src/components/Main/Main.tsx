@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Main.scss';
 import Input from '../Input/Input';
 import personIcon from '../../assets/images/icon-person.svg';
 import dollarIcon from '../../assets/images/icon-dollar.svg';
 import Button from '../Button/Button';
+import ButtonLarge from '../ButtonLarge/ButtonLarge';
 
-export const tipRates = [5, 10, 15, 25, 50];
+const tipRates = [5, 10, 15, 25, 50];
 
 type ReceiptInformationType = {
   billAmount: number;
   tipRate: number;
   peopleCount: number;
-}
+};
 
 const receiptInformationInitialState = {
-  billAmount: 0,
-  tipRate: 0,
-  peopleCount: 0,
+  billAmount: NaN,
+  tipRate: NaN,
+  peopleCount: NaN,
 };
 
 const resultingAmountsInitialState = {
@@ -27,17 +28,35 @@ const resultingAmountsInitialState = {
 const Main = () => {
   const [receiptInformation, setReceiptInformation] = useState<ReceiptInformationType>(receiptInformationInitialState);
   const [resultingAmounts, setResultingAmounts] = useState(resultingAmountsInitialState);
+  const [showZeroError, setShowZeroError] = useState(false);
+  const [activeButton, setActiveButton] = useState(0);
+
+  // creating references, so that it is possible to reset input fields
+  const billAmountRef = useRef<any | null>(null);
+  const tipRateRef = useRef<any | null>(null);
+  const peopleCountRef = useRef<any | null>(null);
 
   const chooseTipRate = (value: string) => {
     setReceiptInformation({ ...receiptInformation, tipRate: parseInt(value, 10) });
   };
 
+  const handleClick = (value: string) => {
+    chooseTipRate(value);
+    setActiveButton(parseInt(value, 10));
+  };
+
   const calculateAmountsPerPerson = () => {
     const { tipRate, billAmount, peopleCount } = receiptInformation;
+
+    if (peopleCount === 0) {
+      setShowZeroError(true);
+      return;
+    }
 
     const totalPerPerson = billAmount / peopleCount;
     const tipPerPerson = totalPerPerson * (tipRate / 100);
 
+    setShowZeroError(false);
     setResultingAmounts({ tipAmountPerPerson: tipPerPerson, totalAmountPerPerson: totalPerPerson });
   };
 
@@ -45,8 +64,21 @@ const Main = () => {
     calculateAmountsPerPerson();
   }, [receiptInformation]);
 
-  console.log('receiptInformation', receiptInformation);
-  console.log('resultingAmounts', resultingAmounts);
+  const handleDataReset = () => {
+    setReceiptInformation(receiptInformationInitialState);
+    setResultingAmounts(resultingAmountsInitialState);
+
+    billAmountRef.current?.resetInput();
+    tipRateRef.current?.resetInput();
+    peopleCountRef.current?.resetInput();
+
+    setActiveButton(0);
+  };
+
+  const receiptValuesInvalid = (Number.isNaN(receiptInformation.peopleCount)
+      || Number.isNaN(receiptInformation.tipRate)
+      || Number.isNaN(receiptInformation.billAmount)
+      || receiptInformation.peopleCount === 0);
 
   return (
     <div className="main-section">
@@ -57,6 +89,8 @@ const Main = () => {
             Bill
           </label>
           <Input
+            ref={billAmountRef}
+            name="billAmount"
             id="amount"
             getInputValue={(value) => {
               setReceiptInformation({ ...receiptInformation, billAmount: parseInt(value, 10) });
@@ -73,10 +107,12 @@ const Main = () => {
             {tipRates.map((rate) => (
               <div
                 key={rate}
-                onClick={() => chooseTipRate(String(rate))}
                 className="rate"
               >
-                <Button>
+                <Button
+                  className={(rate === activeButton) ? 'active' : ''}
+                  onClick={() => handleClick(String(rate))}
+                >
                   {rate}
                   %
                 </Button>
@@ -84,18 +120,29 @@ const Main = () => {
             ))}
             <div className="rate">
               <Input
+                ref={tipRateRef}
+                name="tipRate"
                 placeholder="Custom"
-                getInputValue={(value) => chooseTipRate(value)}
-                style={{ width: '8rem', height: '2.70rem' }}
+                getInputValue={(value) => {
+                  chooseTipRate(value);
+                  setActiveButton(0);
+                }}
+                style={{ height: '2.70rem', fontSize: '20px' }}
               />
             </div>
           </div>
         </div>
         <div className="input-part__item">
-          <label htmlFor="people-count">
-            Number of People
-          </label>
+          <div className="error-message--wrapper">
+            <label htmlFor="people-count">
+              Number of People
+            </label>
+            <div>{showZeroError && (<span className="error-message">Can&apos;t be zero</span>)}</div>
+          </div>
           <Input
+            ref={peopleCountRef}
+            name="peopleCount"
+            isValidationError={showZeroError}
             id="people-count"
             getInputValue={(value) => {
               setReceiptInformation({ ...receiptInformation, peopleCount: parseInt(value, 10) });
@@ -119,7 +166,7 @@ const Main = () => {
               $
               {resultingAmounts.tipAmountPerPerson
                 ? resultingAmounts.tipAmountPerPerson.toFixed(2)
-                : 0.00}
+                : '0.00'}
             </div>
           </div>
           <div className="output-part__item">
@@ -131,14 +178,19 @@ const Main = () => {
             </div>
             <div className="amount">
               $
-              {typeof resultingAmounts.totalAmountPerPerson === 'number'
+              {resultingAmounts.totalAmountPerPerson
                 ? resultingAmounts.totalAmountPerPerson.toFixed(2)
-                : 0.00}
+                : '0.00'}
             </div>
           </div>
         </div>
         <div>
-          <Button style={{ width: '100%', height: '2.50rem', backgroundColor: 'var(--primary)' }}>RESET</Button>
+          <ButtonLarge
+            onClick={handleDataReset}
+            disabled={receiptValuesInvalid}
+          >
+            RESET
+          </ButtonLarge>
         </div>
       </section>
 
