@@ -1,5 +1,9 @@
 # Tip Splitter App
 
+A working project can be found here: https://lejanio.github.io/Tip-Calculator/
+
+![Tip Calculator](tip-calculator-demo.gif)
+
 ## General description
 
 The app receives user inputs of the bill total amount, the tip rate and the number of customers
