@@ -1,23 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Main.scss';
 import Input from '../Input/Input';
 import personIcon from '../../assets/images/icon-person.svg';
 import dollarIcon from '../../assets/images/icon-dollar.svg';
 import Button from '../Button/Button';
-import ButtonLarge from '../ButtonLarge/ButtonLarge';
 
 const tipRates = [5, 10, 15, 25, 50];
 
 type ReceiptInformationType = {
-  billAmount: number;
-  tipRate: number;
-  peopleCount: number;
+  billAmount: string;
+  tipRate: string;
+  peopleCount: string;
 };
 
 const receiptInformationInitialState = {
-  billAmount: NaN,
-  tipRate: NaN,
-  peopleCount: NaN,
+  billAmount: '',
+  tipRate: '',
+  peopleCount: '',
 };
 
 const resultingAmountsInitialState = {
@@ -31,32 +30,32 @@ const Main = () => {
   const [showZeroError, setShowZeroError] = useState(false);
   const [activeButton, setActiveButton] = useState(0);
 
-  // creating references, so that it is possible to reset input fields
-  const billAmountRef = useRef<any | null>(null);
-  const tipRateRef = useRef<any | null>(null);
-  const peopleCountRef = useRef<any | null>(null);
-
   const chooseTipRate = (value: string) => {
-    setReceiptInformation({ ...receiptInformation, tipRate: parseInt(value, 10) });
+    setReceiptInformation({ ...receiptInformation, tipRate: value });
   };
 
   const handleClick = (value: string) => {
     chooseTipRate(value);
-    setActiveButton(parseInt(value, 10));
+    setActiveButton(+value);
   };
 
   const calculateAmountsPerPerson = () => {
     const { tipRate, billAmount, peopleCount } = receiptInformation;
 
-    if (peopleCount === 0) {
+    if (peopleCount === '0') {
       setShowZeroError(true);
       return;
     }
 
-    const totalPerPerson = billAmount / peopleCount;
-    const tipPerPerson = totalPerPerson * (tipRate / 100);
+    const totalPerPerson = +billAmount / +peopleCount;
+    const tipPerPerson = totalPerPerson * (+tipRate / 100);
 
     setShowZeroError(false);
+
+    if (totalPerPerson === Infinity) {
+      return;
+    }
+
     setResultingAmounts({ tipAmountPerPerson: tipPerPerson, totalAmountPerPerson: totalPerPerson });
   };
 
@@ -64,21 +63,21 @@ const Main = () => {
     calculateAmountsPerPerson();
   }, [receiptInformation]);
 
+  const displayTotal = (value: number) => (value
+    ? value.toFixed(2)
+    : '0.00');
+
   const handleDataReset = () => {
     setReceiptInformation(receiptInformationInitialState);
     setResultingAmounts(resultingAmountsInitialState);
 
-    billAmountRef.current?.resetInput();
-    tipRateRef.current?.resetInput();
-    peopleCountRef.current?.resetInput();
-
     setActiveButton(0);
   };
 
-  const receiptValuesInvalid = (Number.isNaN(receiptInformation.peopleCount)
-      || Number.isNaN(receiptInformation.tipRate)
-      || Number.isNaN(receiptInformation.billAmount)
-      || receiptInformation.peopleCount === 0);
+  const receiptValuesInvalid = (receiptInformation.peopleCount === ''
+      || receiptInformation.tipRate === ''
+      || receiptInformation.billAmount === ''
+      || receiptInformation.peopleCount === '0');
 
   return (
     <div className="main-section">
@@ -89,11 +88,11 @@ const Main = () => {
             Bill
           </label>
           <Input
-            ref={billAmountRef}
             name="billAmount"
             id="amount"
-            getInputValue={(value) => {
-              setReceiptInformation({ ...receiptInformation, billAmount: parseInt(value, 10) });
+            value={receiptInformation.billAmount}
+            onChange={(value) => {
+              setReceiptInformation({ ...receiptInformation, billAmount: value });
             }}
             placeholder="0"
             icon={dollarIcon}
@@ -110,7 +109,8 @@ const Main = () => {
                 className="rate"
               >
                 <Button
-                  className={(rate === activeButton) ? 'active' : ''}
+                  size="small"
+                  active={(rate === activeButton)}
                   onClick={() => handleClick(String(rate))}
                 >
                   {rate}
@@ -120,14 +120,15 @@ const Main = () => {
             ))}
             <div className="rate">
               <Input
-                ref={tipRateRef}
                 name="tipRate"
                 placeholder="Custom"
-                getInputValue={(value) => {
+                value={(activeButton === 0) ? receiptInformation.tipRate : ''}
+                onChange={(value) => {
                   chooseTipRate(value);
                   setActiveButton(0);
                 }}
-                style={{ height: '2.70rem', fontSize: '20px' }}
+                height="2.70rem"
+                fontSize="20px"
               />
             </div>
           </div>
@@ -140,12 +141,12 @@ const Main = () => {
             <div>{showZeroError && (<span className="error-message">Can&apos;t be zero</span>)}</div>
           </div>
           <Input
-            ref={peopleCountRef}
             name="peopleCount"
-            isValidationError={showZeroError}
+            hasError={showZeroError}
             id="people-count"
-            getInputValue={(value) => {
-              setReceiptInformation({ ...receiptInformation, peopleCount: parseInt(value, 10) });
+            value={receiptInformation.peopleCount}
+            onChange={(value) => {
+              setReceiptInformation({ ...receiptInformation, peopleCount: value });
             }}
             placeholder="0"
             icon={personIcon}
@@ -164,9 +165,7 @@ const Main = () => {
             </div>
             <div className="amount">
               $
-              {resultingAmounts.tipAmountPerPerson
-                ? resultingAmounts.tipAmountPerPerson.toFixed(2)
-                : '0.00'}
+              {displayTotal(resultingAmounts.tipAmountPerPerson)}
             </div>
           </div>
           <div className="output-part__item">
@@ -178,19 +177,18 @@ const Main = () => {
             </div>
             <div className="amount">
               $
-              {resultingAmounts.totalAmountPerPerson
-                ? resultingAmounts.totalAmountPerPerson.toFixed(2)
-                : '0.00'}
+              {displayTotal(resultingAmounts.totalAmountPerPerson)}
             </div>
           </div>
         </div>
         <div>
-          <ButtonLarge
+          <Button
+            size="large"
             onClick={handleDataReset}
             disabled={receiptValuesInvalid}
           >
             RESET
-          </ButtonLarge>
+          </Button>
         </div>
       </section>
 

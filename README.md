@@ -6,7 +6,7 @@ A working project can be found here: https://lejanio.github.io/Tip-Calculator/
 
 ## General description
 
-The app receives user inputs of the bill total amount, the tip rate and the number of customers
+The app receives user inputs of the total bill amount, the tip rate and the number of customers
 and calculates the tip amount, as well as the total amount per person.
 The inputs and results can then be reset using the RESET button which becomes active
 after valid inputs have been provided.
@@ -20,13 +20,11 @@ principles.
     - Contains the header section with the logo image
     - Contains the main section component which, in turn, contains the input and button components
 2. Main.tsx file:
-    - Contains states for user input, calculated amounts, input validation error, as well as the currently active button
-    - Contains several instances of input component which, in turn, contains local input state
-    - Contains several instances of button component, as well as the large button component
-    - Uses the useRef hook for referencing the input component for resetting user input
-3. The components are located in the src/components folder with a separate subfolder for .tsx and .scss files 
+    - Contains states for user inputs, calculated amounts, input validation error, as well as the currently active button
+    - Contains several instances of the input component
+    - Contains several instances of the button component
+3. The components are located in the src/components folder with a separate subfolder for .tsx and .scss files
    of each corresponding component.
-4. A CSS reset file is provided in the src/utils folder.
 
 ---
 ## Assignment

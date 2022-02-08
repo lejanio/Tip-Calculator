@@ -1,5 +1,4 @@
 .button {
-  background-color: var(--neutral-very-dark);
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -7,7 +6,6 @@
   font-family: inherit;
   font-weight: 700;
   font-size: 1.4rem;
-  color: var(--neutral-white);
   border: 1px solid transparent;
   border-radius: 5px;
   transition: 0.1s;
@@ -30,13 +28,17 @@
   }
 }
 
-.active {
+.button-small {
+  background-color: var(--neutral-very-dark);
+  color: var(--neutral-white);
+}
+
+.button-large {
   background-color: var(--primary);
   color: var(--neutral-very-dark);
 }
 
-@media (min-width: 768px) {
-  .button {
-    width: 100%;
-  }
+.active {
+  background-color: var(--primary);
+  color: var(--neutral-very-dark);
 }
