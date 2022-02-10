@@ -27,6 +27,7 @@ principles.
    of each corresponding component.
 
 ---
+
 ## Assignment
 
 ### Objective
